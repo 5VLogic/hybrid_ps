@@ -1,40 +1,26 @@
-# i2c
-A project for the ATmega328PB to use the TWI0 peripheral for reading and sending data across the i2c bus.
+# Hybrid Power Supply FW
+This readme file contains some useful information about the uC part
+of the project.
 
-There are of course improvements that can be made and functions to be added.
-The case of a slave-receiver is still to be implemented.
+## Setting the fuse bytes
+The project code is based on the assumption that the atmega88pb has
+its fuse bytes set as explained in the following.
 
-If the objective is to use the ISR to minimize processing time during wait
-periods, it's likely better to write a custom FW for the specific application.
+### Brown Out Detector
+For some reason at power on, the supply voltage rise is not adequate
+and the uC doesn't start up. To correct this, set the brown out detector
+voltage to 2.7V by writing BODLEVEL1 fuse bit in the high fuse byte to 0:
 
-The slave address parameter is taken as pre-shifted to the left by 1 bit,
-and the LSB determines if the global call is active or not.
+### CLK Frequency
+The uC's clock frequency is set to 8MHz by disabling the internal clock
+divider (by 8). This is done by setting the low fuse byte as follows:
 
-## About the versions of the ATmega you are using.
+### EEPROM preservation during chip erase
+To avoid the EEPROM being reset at poweroff. (Add EESAVE bit = 0 on high fuse byte.)
 
-### If you are using a standard Arduino Uno / Nano
-then you likely have the regular ATmega328P an you should remove
-all trailing 0 (zeros) from the TWI register names.
-Then remove the "B" from all occurrances of the ATmega328PB name
-in the makefile.
+### Fuse Byte setting
+Based on the above, the low and high fuse bytes are set with the following commands:
 
-### If you are using the PB version as me
-you likely need to include the specific libraries.
-For this follow the following steps:
+_avrdude -p atmega88pb -c stk500v2 -b 115200 -P usb -U lfuse:w:0xe2:m_
 
-1) Download libraries from atmel website: http://packs.download.atmel.com/
-
-2) Put gcc/dev/atmega328pb/avr5/crtatmega328pb.o and
-            gcc/dev/atmega328pb/avr5/libatmega328pb.a in
-            /usr/lib/avr/lib/avr5/
-
-3) Then put "include/avr/iom328pb.h" in /usr/lib/avr/include/
-
-4) Add the following lines to /usr/lib/avr/include/io.h:
-            "
-            elif defined (__AVR_ATmega328PB__)
-            include <avr/iom328pb.h>
-            "
-
-
-Note: the library files are also available in the folder "pb_lib"
+_avrdude -p atmega88pb -c stk500v2 -b 115200 -P usb -U hfuse:w:0xd5:m_
