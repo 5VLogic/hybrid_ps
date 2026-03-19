@@ -1,6 +1,7 @@
 # Hybrid Power Supply FW
 This readme file contains some useful information about the uC part
-of the project.
+of a project of a hybrid power supply with the switching regulator being controlled by a digital potentiometer.
+The measurements are done by an ATmega88pb and shown with a three-digit 7-segment display through SPI.
 
 ## Setting the fuse bytes
 The project code is based on the assumption that the atmega88pb has
