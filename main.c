@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 #include <util/twi.h>
 #include <avr/eeprom.h>
-//#include "./lib/usart.h"// Only for debugging.
+//#include "./lib/usart.h"// Only for debugging
 #include "./lib/i2c_atmega88pb.h"
 
 #define PIN_UI PB0
